@@ -26,7 +26,10 @@ WARNING: Did not unuse /usr/share/Modules/modulefiles
 [debasmita@node01 ~]$ mv /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001_SRA.txt /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/
 
 
-
+# then we load the SRA environment and changed the directory where the .txt file was moved.
+[debasmita@node01 ~]$ module load anaconda3/2024.06
+(base) [debasmita@node01 ~]$ conda activate sra_env
+(sra_env) [debasmita@node01 ~]$ cd workspace/Canidae_Felidae_Project/results/FEL001/SRA/
 
 
 
