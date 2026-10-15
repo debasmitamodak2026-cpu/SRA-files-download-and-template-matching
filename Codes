@@ -128,6 +128,12 @@ done < SRA/FEL001_SRA.txt
 (sra_env) [debasmita@node01 FEL001]$ ls FASTQ/*_fastqc.html | wc -l
 
 
+# Check the MultiQC is installed - If it gives a pathway, then it is installed.
+(sra_env) [debasmita@node01 FEL001]$ which multiqc
+
+
+
+
 
 
 
