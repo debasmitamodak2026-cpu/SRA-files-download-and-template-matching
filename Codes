@@ -1,5 +1,7 @@
 # SRA-files-download-and-template-matching
 
+
+
 # Connect with IISc VPN - in Linux terminal
 (base) user@user:~$ cd Downloads/
 (base) user@user:~/Downloads$ 
@@ -12,6 +14,10 @@ Enter Auth Username: debasmitam@iisc.ac.in
 🔐 Enter Auth Password: **********  
 
 # Do not close or type Ctrl+C
+
+
+
+
 # Next open anothe terminal to login in the Anubhab Khan's Lab server
 
 (base) user@user:~$ ssh debasmita@10.58.98.103
@@ -22,8 +28,11 @@ Last login: Wed Oct 14 09:15:05 2026 from 172.23.46.2
 WARNING: Did not unuse /usr/share/Modules/modulefiles
 [debasmita@node01 ~]$ 
 
+
+
 # Now move the FEL001_SRA.txt file from my ubuntu system to a folder in server.
 [debasmita@node01 ~]$ mv /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001_SRA.txt /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/
+
 
 
 # then we load the SRA environment and changed the directory where the .txt file was moved.
@@ -31,6 +40,7 @@ WARNING: Did not unuse /usr/share/Modules/modulefiles
 (base) [debasmita@node01 ~]$ conda activate sra_env
 (sra_env) [debasmita@node01 SRA]$ prefetch --version
 (sra_env) [debasmita@node01 ~]$ cd workspace/Canidae_Felidae_Project/results/FEL001/SRA/
+
 
 
 # Wanted to check which accession numbers are available in the file.
@@ -46,11 +56,16 @@ while read -r accession; do
     prefetch "$accession" --output-directory "$accession"
 done < FEL001_SRA.txt
 
+
+
 # Now perfect fetch has saved the files one folder deeper.
 (sra_env) [debasmita@node01 SRA]$ find SRR12354115 -type f
 
+
+
 # Then we check which of them are downloaded.
 (sra_env) [debasmita@node01 SRA]$ ls -lh /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/SRA
+
 
 
 # Check wether the downloaded files are empty.
@@ -63,6 +78,7 @@ for accession in $(cat FEL001_SRA.txt); do
 done
 
 
+
 # Check the readability of each doenloaded file
 for accession in $(cat FEL001_SRA.txt); do
     echo "Validating: $accession"
@@ -70,6 +86,9 @@ for accession in $(cat FEL001_SRA.txt); do
 done
 
 
+
+# Then we made a folder for output
+(sra_env) [debasmita@node01 SRA]$ mkdir -p /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/FASTQ
 
 
 
