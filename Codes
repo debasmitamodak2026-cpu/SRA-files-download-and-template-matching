@@ -63,6 +63,12 @@ for accession in $(cat FEL001_SRA.txt); do
 done
 
 
+# Check the readability of each doenloaded file
+for accession in $(cat FEL001_SRA.txt); do
+    echo "Validating: $accession"
+    vdb-validate "$accession/$accession/$accession.sra"
+done
+
 
 
 
