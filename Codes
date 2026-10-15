@@ -49,6 +49,9 @@ done < FEL001_SRA.txt
 # Now perfect fetch has saved the files one folder deeper.
 (sra_env) [debasmita@node01 SRA]$ find SRR12354115 -type f
 
+# Then we check which of them are downloaded.
+(sra_env) [debasmita@node01 SRA]$ ls -lh /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/SRA
+
 
 # Check wether the downloaded files are empty.
 for accession in $(cat FEL001_SRA.txt); do
@@ -60,8 +63,7 @@ for accession in $(cat FEL001_SRA.txt); do
 done
 
 
-# Then we check which of them are downloaded.
-(sra_env) [debasmita@node01 SRA]$ ls -lh /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/SRA
+
 
 
 
