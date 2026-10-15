@@ -39,7 +39,8 @@ WARNING: Did not unuse /usr/share/Modules/modulefiles
 [debasmita@node01 ~]$ module load anaconda3/2024.06
 (base) [debasmita@node01 ~]$ conda activate sra_env
 (sra_env) [debasmita@node01 SRA]$ prefetch --version
-(sra_env) [debasmita@node01 ~]$ cd workspace/Canidae_Felidae_Project/results/FEL001/SRA/
+(sra_env) [debasmita@node01 ~]$ cd /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/SRA/
+
 
 
 
