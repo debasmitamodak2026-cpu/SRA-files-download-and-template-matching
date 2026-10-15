@@ -29,8 +29,27 @@ WARNING: Did not unuse /usr/share/Modules/modulefiles
 # then we load the SRA environment and changed the directory where the .txt file was moved.
 [debasmita@node01 ~]$ module load anaconda3/2024.06
 (base) [debasmita@node01 ~]$ conda activate sra_env
+(sra_env) [debasmita@node01 SRA]$ prefetch --version
 (sra_env) [debasmita@node01 ~]$ cd workspace/Canidae_Felidae_Project/results/FEL001/SRA/
 
+
+# Wanted to check which accession numbers are available in the file.
+(sra_env) [debasmita@node01 ~]$ cat /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/SRA/FEL001_SRA.txt
+
+
+
+# Download each SRA files from taking the accession number from the .txt file 
+# This takes hours - the laptop sceen should not go to sleep
+
+while read -r accession; do
+    echo "Processing: $accession"
+    prefetch "$accession" --output-directory "$accession"
+done < FEL001_SRA.txt
+
+
+
+# Then we check which of them are downloaded.
+(sra_env) [debasmita@node01 SRA]$ ls -lh /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/SRA
 
 
 
