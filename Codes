@@ -14,6 +14,16 @@ Enter Auth Username: debasmitam@iisc.ac.in
 # Do not close or type Ctrl+C
 # Next open anothe terminal
 
+(base) user@user:~$ ssh debasmita@10.58.98.103
+debasmita@10.58.98.103's password: 
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Last login: Wed Oct 14 09:15:05 2026 from 172.23.46.2
+WARNING: Did not unuse /usr/share/Modules/modulefiles
+[debasmita@node01 ~]$ 
+
+
+
 
 
 
