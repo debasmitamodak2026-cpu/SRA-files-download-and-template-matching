@@ -23,6 +23,7 @@ WARNING: Did not unuse /usr/share/Modules/modulefiles
 [debasmita@node01 ~]$ 
 
 # Now move the FEL001_SRA.txt file from my ubuntu system to a folder in server.
+[debasmita@node01 ~]$ mv /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001_SRA.txt /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/
 
 
 
