@@ -86,8 +86,13 @@ for accession in $(cat FEL001_SRA.txt); do
 done
 
 
+# Then we made a folder for output
+(sra_env) [debasmita@node01 SRA]$ mkdir -p /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/FASTQ
 
-# Convert the downloaded SRA files in FASTQ files
+
+
+# Convert the downloaded SRA files in FASTQ files 
+# This can take long time
 cd /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001
 
 while read -r accession; do
@@ -99,8 +104,6 @@ while read -r accession; do
 
 done < SRA/FEL001_SRA.txt
 
-# Then we made a folder for output
-(sra_env) [debasmita@node01 SRA]$ mkdir -p /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001/FASTQ
 
 
 
