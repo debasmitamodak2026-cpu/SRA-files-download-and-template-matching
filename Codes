@@ -12,7 +12,7 @@ Enter Auth Username: debasmitam@iisc.ac.in
 🔐 Enter Auth Password: **********  
 
 # Do not close or type Ctrl+C
-# Next open anothe terminal
+# Next open anothe terminal to login in the Anubhab Khan's Lab server
 
 (base) user@user:~$ ssh debasmita@10.58.98.103
 debasmita@10.58.98.103's password: 
