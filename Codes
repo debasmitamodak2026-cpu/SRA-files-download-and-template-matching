@@ -133,6 +133,10 @@ done < SRA/FEL001_SRA.txt
 
 
 
+# Generate the combined quality report.
+(sra_env) [debasmita@node01 FEL001]$ multiqc FASTQ/ -o FASTQ/
+
+
 
 
 
