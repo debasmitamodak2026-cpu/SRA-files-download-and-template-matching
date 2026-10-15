@@ -50,8 +50,14 @@ done < FEL001_SRA.txt
 (sra_env) [debasmita@node01 SRA]$ find SRR12354115 -type f
 
 
-#
-
+# Check wether the downloaded files are empty.
+for accession in $(cat FEL001_SRA.txt); do
+    if [ -s "$accession/$accession/$accession.sra" ]; then
+        echo "FOUND: $accession"
+    else
+        echo "MISSING OR EMPTY: $accession"
+    fi
+done
 
 
 # Then we check which of them are downloaded.
