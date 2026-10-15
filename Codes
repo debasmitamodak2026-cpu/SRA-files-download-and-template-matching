@@ -108,3 +108,19 @@ done < SRA/FEL001_SRA.txt
 
 
 
+# Check whether all of the files are on output directory
+(sra_env) [debasmita@node01 FEL001]$ ls -lh FASTQ/*.fastq
+
+
+# Check the number of files in output directory
+(sra_env) [debasmita@node01 FEL001]$ ls FASTQ/*.fastq | wc -l
+
+
+# Check whether fastqc is available, If it is, then it will show the path.
+(sra_env) [debasmita@node01 FEL001]$ which fastqc
+
+
+
+
+
+
