@@ -137,6 +137,12 @@ done < SRA/FEL001_SRA.txt
 (sra_env) [debasmita@node01 FEL001]$ multiqc FASTQ/ -o FASTQ/
 
 
+# Extract MultiQC summary
+(sra_env) [debasmita@node01 FEL001]$ ls -lh FASTQ/multiqc_report.html FASTQ/multiqc_data/
+
+
+
+
 
 
 
