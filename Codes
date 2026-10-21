@@ -172,6 +172,10 @@ AdapterRemoval \
 
 
 
+# Reading the trimming stats
+(adapterremoval_env) [debasmita@node01 FEL001]$ cat FASTQ/trim_test/SRR12354115.settings
+
+
 
 
 
