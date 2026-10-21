@@ -193,6 +193,9 @@ AdapterRemoval \
   --gzip
 
 
+# Comparing two trimming runs
+(adapterremoval_env) [debasmita@node01 FEL001]$ cat FASTQ/trim_test/SRR12354115_paper_settings.settings
+
 
 
 
