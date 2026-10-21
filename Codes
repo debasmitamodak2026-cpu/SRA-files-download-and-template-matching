@@ -201,7 +201,11 @@ AdapterRemoval \
 (adapterremoval_env) [debasmita@node01 FEL001]$ ls FASTQ/*.fastq | wc -l
 # Made final trim folder
 (adapterremoval_env) [debasmita@node01 FEL001]$ mkdir -p FASTQ/trimmed
-# Run the code to trim the files
+
+
+
+# Run the code to trim the files - by checking which outputs already exist and processing only the missing ones
+
 for f in FASTQ/*.fastq; do
     sample=$(basename "$f" .fastq)
     output="FASTQ/trimmed/${sample}.truncated.gz"
