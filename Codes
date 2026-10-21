@@ -291,12 +291,29 @@ for f in FASTQ/*.fastq; do
 done
 
 
+
+
+# ctivate the mapping environment
+(adapterremoval_env) [debasmita@node01 FEL001]$ conda activate homotherium_mapping
+
+
+
 # Create the reference folder
 (homotherium_mapping) [debasmita@node01 FEL001]$ mkdir -p reference/lion
 
 
 
 
-# ctivate the mapping environment
-(adapterremoval_env) [debasmita@node01 FEL001]$ conda activate homotherium_mapping
 
+# Download the reference genome from NCBI - GCF_018350215.1 - chosen based on quality - enlisted previously
+# Lion was chosen due to the existing paper - https://pmc.ncbi.nlm.nih.gov/articles/PMC7762822/?utm_source=chatgpt.com
+
+cd /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001
+
+curl -fL --retry 3 \
+  -o reference/lion/lion_genome.fna.gz \
+  https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/018/350/215/GCF_018350215.1_P.leo_Ple1_pat1.1/GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna.gz
+
+curl -fL --retry 3 \
+  -o reference/lion/lion_annotation.gff.gz \
+  https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/018/350/215/GCF_018350215.1_P.leo_Ple1_pat1.1/GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.gff.gz
