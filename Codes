@@ -155,6 +155,23 @@ done < SRA/FEL001_SRA.txt
 (adapterremoval_env) [debasmita@node01 FEL001]$ head -n 20 FASTQ/SRR12354115.fastq
 
 
+# Made a folder to test it
+(adapterremoval_env) [debasmita@node01 FEL001]$ mkdir -p FASTQ/trim_test
+
+
+# Trim the first run 
+AdapterRemoval \
+  --file1 FASTQ/SRR12354115.fastq \
+  --basename FASTQ/trim_test/SRR12354115 \
+  --minlength 30 \
+  --trimns \
+  --trimqualities \
+  --minquality 2 \
+  --threads 4 \
+  --gzip
+
+
+
 
 
 
