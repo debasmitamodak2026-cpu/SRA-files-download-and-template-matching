@@ -174,7 +174,23 @@ AdapterRemoval \
 
 # Reading the trimming stats
 (adapterremoval_env) [debasmita@node01 FEL001]$ cat FASTQ/trim_test/SRR12354115.settings
+# Inspect the trimmed reads
+(adapterremoval_env) [debasmita@node01 FEL001]$ gzip -cd FASTQ/trim_test/SRR12354115.truncated.gz | head -n 12
+# Verify the actual output length 
+(adapterremoval_env) [debasmita@node01 FEL001]$ gzip -cd FASTQ/trim_test/SRR12354115.truncated.gz | awk 'NR%4==2 {n++; total+=length($0); if(length($0)<30) short++} END {printf "Reads: %d\nMean length: %.2f bp\nReads shorter than 30 bp: %d\n", n, total/n, short}'
 
+
+# Run a second test with paper-aligned settings. Paper - https://pmc.ncbi.nlm.nih.gov/articles/PMC7762822/?utm_source=chatgpt.com
+AdapterRemoval \
+  --file1 FASTQ/SRR12354115.fastq \
+  --basename FASTQ/trim_test/SRR12354115_paper_settings \
+  --minlength 30 \
+  --maxns 50 \
+  --trimns \
+  --trimqualities \
+  --minquality 4 \
+  --threads 4 \
+  --gzip
 
 
 
