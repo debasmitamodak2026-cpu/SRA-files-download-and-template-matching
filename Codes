@@ -291,6 +291,11 @@ for f in FASTQ/*.fastq; do
 done
 
 
+# Create the reference folder
+(homotherium_mapping) [debasmita@node01 FEL001]$ mkdir -p reference/lion
+
+
+
 
 # ctivate the mapping environment
 (adapterremoval_env) [debasmita@node01 FEL001]$ conda activate homotherium_mapping
