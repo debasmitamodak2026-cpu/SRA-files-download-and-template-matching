@@ -292,4 +292,6 @@ done
 
 
 
+# ctivate the mapping environment
+(adapterremoval_env) [debasmita@node01 FEL001]$ conda activate homotherium_mapping
 
