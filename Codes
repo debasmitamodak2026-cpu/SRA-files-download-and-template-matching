@@ -237,9 +237,20 @@ for f in FASTQ/*.fastq; do
 done
 
 
+# Verify all 20 output files
+(adapterremoval_env) [debasmita@node01 FEL001]$ ls -lh FASTQ/trimmed/*.truncated.gz | wc -l
 
 
 
+# Test the integrity of all 20 files
+
+for f in FASTQ/trimmed/*.truncated.gz; do
+    if gzip -t "$f" 2>/dev/null; then
+        echo "OK: $(basename "$f")"
+    else
+        echo "ERROR: $(basename "$f")"
+    fi
+done
 
 
 
