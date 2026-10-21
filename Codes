@@ -151,6 +151,11 @@ done < SRA/FEL001_SRA.txt
 (adapterremoval_env) [debasmita@node01 FEL001]$ AdapterRemoval --version
 
 
+# Inspect the reads for adapter sequence
+(adapterremoval_env) [debasmita@node01 FEL001]$ head -n 20 FASTQ/SRR12354115.fastq
+
+
+
 
 
 
