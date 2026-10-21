@@ -195,6 +195,42 @@ AdapterRemoval \
 
 # Comparing two trimming runs
 (adapterremoval_env) [debasmita@node01 FEL001]$ cat FASTQ/trim_test/SRR12354115_paper_settings.settings
+# Check the disk space
+(adapterremoval_env) [debasmita@node01 FEL001]$ df -h .
+# Check the number of files we are going to trim (it should be 20 in this case)
+(adapterremoval_env) [debasmita@node01 FEL001]$ ls FASTQ/*.fastq | wc -l
+# Made final trim folder
+(adapterremoval_env) [debasmita@node01 FEL001]$ mkdir -p FASTQ/trimmed
+# Run the code to trim the files
+for f in FASTQ/*.fastq; do
+    sample=$(basename "$f" .fastq)
+    output="FASTQ/trimmed/${sample}.truncated.gz"
+
+    if [ -s "$output" ]; then
+        echo "Skipping $sample: output already exists"
+        continue
+    fi
+
+    echo "Processing $sample ..."
+
+    AdapterRemoval \
+        --file1 "$f" \
+        --basename "FASTQ/trimmed/$sample" \
+        --minlength 30 \
+        --maxns 50 \
+        --trimns \
+        --trimqualities \
+        --minquality 4 \
+        --threads 4 \
+        --gzip \
+        > "FASTQ/trimmed/${sample}.log" 2>&1
+
+    if [ $? -eq 0 ] && [ -s "$output" ]; then
+        echo "Finished $sample"
+    else
+        echo "ERROR processing $sample; check FASTQ/trimmed/${sample}.log"
+    fi
+done
 
 
 
