@@ -272,4 +272,24 @@ done
 
 
 
+# Check how many reads were retained from each original run
+
+for f in FASTQ/*.fastq; do
+    sample=$(basename "$f" .fastq)
+    original=$(($(wc -l < "$f") / 4))
+    trimmed=$(awk -F': ' '/Number of retained reads:/ {print $2; exit}' \
+        "FASTQ/trimmed/${sample}.settings")
+
+    awk -v s="$sample" -v o="$original" -v t="$trimmed" \
+        'BEGIN {
+            if (o > 0 && t != "") {
+                printf "%s\t%d\t%d\t%.2f%%\n", s, o, t, 100*t/o
+            } else {
+                printf "%s\tCHECK SETTINGS FILE\n", s
+            }
+        }'
+done
+
+
+
 
