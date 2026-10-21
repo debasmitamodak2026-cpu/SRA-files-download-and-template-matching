@@ -148,6 +148,9 @@ done < SRA/FEL001_SRA.txt
 
 # Activate adapter removal environment
 (sra_env) [debasmita@node01 FEL001]$ conda activate adapterremoval_env
+(adapterremoval_env) [debasmita@node01 FEL001]$ AdapterRemoval --version
+
+
 
 
 
