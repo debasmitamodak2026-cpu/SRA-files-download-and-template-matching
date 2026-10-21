@@ -255,6 +255,19 @@ done
 
 
 
+# Count retained reads in all 20 files
+
+for f in FASTQ/trimmed/*.truncated.gz; do
+    gzip -cd "$f" | awk -v sample="$(basename "$f" .truncated.gz)" '
+        NR % 4 == 2 {
+            reads++
+            bases += length($0)
+            if (length($0) < 30) short++
+        }
+        END {
+            printf "%s\t%d\t%.2f\t%d\n", sample, reads, bases/reads, short
+        }'
+done
 
 
 
