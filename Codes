@@ -146,6 +146,11 @@ done < SRA/FEL001_SRA.txt
 (sra_env) [debasmita@node01 FEL001]$ cat FASTQ/multiqc_data/multiqc_general_stats.txt
 
 
+# Activate adapter removal environment
+(sra_env) [debasmita@node01 FEL001]$ conda activate adapterremoval_env
+
+
+
 
 
 
