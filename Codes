@@ -376,3 +376,59 @@ bwa aln -t 8 -l 1024 \
   FASTQ/trimmed/SRR12354115.truncated.gz \
   > mapping/lion/SRR12354115.sai
 
+
+# Check the alignment file
+(homotherium_mapping) [debasmita@node01 FEL001]$ ls -lh mapping/lion/SRR12354115.sai
+
+
+# Generate the SAM alignment
+bwa samse \
+  reference/lion/lion_genome.fna \
+  mapping/lion/SRR12354115.sai \
+  FASTQ/trimmed/SRR12354115.truncated.gz \
+  > mapping/lion/SRR12354115.sam
+
+
+
+# Convert to sorted BAM
+samtools sort -@ 4 \
+  -o mapping/lion/SRR12354115.sorted.bam \
+  mapping/lion/SRR12354115.sam
+
+
+# Index the sorted BAM file
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools index mapping/lion/SRR12354115.sorted.bam
+
+
+# View mapping statistics
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/SRR12354115.sorted.bam
+
+
+# Get more detailed mapping statistics
+samtools stats mapping/lion/SRR12354115.sorted.bam \
+  > mapping/lion/SRR12354115.stats.txt
+
+
+
+# show the key summary lines
+(homotherium_mapping) [debasmita@node01 FEL001]$ grep '^SN' mapping/lion/SRR12354115.stats.txt | head -n 20
+
+
+# inspect alignment quality
+samtools view mapping/lion/SRR12354115.sorted.bam \
+  | awk '$3 != "*" {print $5}' \
+  | sort -n \
+  | uniq -c
+
+
+
+# Calculate how many reads pass a quality threshold
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools view -c -q 20 mapping/lion/SRR12354115.sorted.bam
+
+# Count reads with MAPQ ≥ 30
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools view -c -q 30 mapping/lion/SRR12354115.sorted.bam
+
+
+
+
+
