@@ -357,7 +357,22 @@ comm -23 \
   | head -n 10
 
 
-
 # Build the BWA index
 (homotherium_mapping) [debasmita@node01 lion]$ bwa index lion_genome.fna
+
+# Check the BWA index files
+(homotherium_mapping) [debasmita@node01 lion]$ ls -lh lion_genome.fna.*
+# Create the mapping output folder
+(homotherium_mapping) [debasmita@node01 lion]$ cd /home/debasmita/workspace/Canidae_Felidae_Project/results/FEL001
+(homotherium_mapping) [debasmita@node01 FEL001]$ mkdir -p mapping/lion
+# Count the trimmed FASTQ files
+(homotherium_mapping) [debasmita@node01 FEL001]$ ls FASTQ/trimmed/*.truncated.gz | wc -l
+
+
+# Map the first sample
+
+bwa aln -t 8 -l 1024 \
+  reference/lion/lion_genome.fna \
+  FASTQ/trimmed/SRR12354115.truncated.gz \
+  > mapping/lion/SRR12354115.sai
 
