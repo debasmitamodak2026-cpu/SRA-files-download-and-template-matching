@@ -317,3 +317,19 @@ curl -fL --retry 3 \
 curl -fL --retry 3 \
   -o reference/lion/lion_annotation.gff.gz \
   https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/018/350/215/GCF_018350215.1_P.leo_Ple1_pat1.1/GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.gff.gz
+
+
+
+# After download is done check the files in the location
+(homotherium_mapping) [debasmita@node01 FEL001]$ cd reference/lion/
+(homotherium_mapping) [debasmita@node01 lion]$ ls
+# Checks whether both compressed files are complete and readable.(if no error then it prints nothing)
+(homotherium_mapping) [debasmita@node01 lion]$ gzip -t lion_genome.fna.gz lion_annotation.gff.gz
+# Displays each file's size in a human-readable format (MB or GB).
+(homotherium_mapping) [debasmita@node01 lion]$ ls -lh lion_genome.fna.gz lion_annotation.gff.gz
+# Extract both files
+(homotherium_mapping) [debasmita@node01 lion]$ gunzip -k lion_genome.fna.gz lion_annotation.gff.gz
+# Confirm the extracted files
+(homotherium_mapping) [debasmita@node01 lion]$ ls -lh lion_genome.fna lion_annotation.gff
+# Inspect the reference genome
+(homotherium_mapping) [debasmita@node01 lion]$ grep -c '^>' lion_genome.fna
