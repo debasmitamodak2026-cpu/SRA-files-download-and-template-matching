@@ -473,5 +473,90 @@ END {
 --------------------------------------------------------------------------------------------------------------------
 
 
+# We can run this entire script.
+
+cat > mapping/lion/run_one_sample.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+sample="${1:?Usage: bash mapping/lion/run_one_sample.sh SRR12354194}"
+ref="reference/lion/lion_genome.fna"
+reads="FASTQ/trimmed/${sample}.truncated.gz"
+out="mapping/lion"
+
+mkdir -p "$out"
+
+if [[ ! -f "$reads" || ! -f "$ref" ]]; then
+    echo "ERROR: Input reads or reference genome not found."
+    exit 1
+fi
+
+if [[ -f "$out/${sample}.MAPQ30.bam" &&
+      -f "$out/${sample}.MAPQ30.bam.bai" ]]; then
+    echo "Filtered BAM and index already exist for $sample."
+    echo "Skipping to avoid overwriting completed results."
+    exit 0
+fi
+
+echo "[$sample] Step 1/7: BWA alignment"
+bwa aln -t 8 -l 1024 "$ref" "$reads" \
+    > "$out/${sample}.sai"
+
+echo "[$sample] Step 2/7: SAM generation"
+bwa samse "$ref" "$out/${sample}.sai" "$reads" \
+    > "$out/${sample}.sam"
+
+echo "[$sample] Step 3/7: Sorting and indexing"
+samtools sort -@ 4 \
+    -o "$out/${sample}.sorted.bam" "$out/${sample}.sam"
+
+samtools index -@ 4 "$out/${sample}.sorted.bam"
+
+echo "[$sample] Step 4/7: Original mapping statistics"
+samtools flagstat "$out/${sample}.sorted.bam" \
+    > "$out/${sample}.flagstat.txt"
+
+cat "$out/${sample}.flagstat.txt"
+
+echo "[$sample] Step 5/7: Filtering MAPQ >= 30"
+samtools view -@ 4 -b -q 30 \
+    -o "$out/${sample}.MAPQ30.bam" \
+    "$out/${sample}.sorted.bam"
+
+samtools flagstat "$out/${sample}.MAPQ30.bam" \
+    > "$out/${sample}.MAPQ30.flagstat.txt"
+
+echo "[$sample] Filtered mapping statistics:"
+cat "$out/${sample}.MAPQ30.flagstat.txt"
+
+echo "[$sample] Step 6/7: Indexing filtered BAM"
+samtools index -@ 4 "$out/${sample}.MAPQ30.bam"
+
+echo "[$sample] Step 7/7: Calculating coverage"
+samtools coverage "$out/${sample}.MAPQ30.bam" |
+awk 'NR>1 {
+    len=$3-$2+1
+    total_len+=len
+    covered+=$5
+    depth_sum+=$7*len
+}
+END {
+    if (total_len > 0) {
+        printf "Reference length: %.0f bp\n", total_len
+        printf "Covered bases: %.0f bp\n", covered
+        printf "Genome coverage: %.4f%%\n", 100*covered/total_len
+        printf "Mean depth: %.6fx\n", depth_sum/total_len
+    } else {
+        print "ERROR: No reference coverage data found."
+        exit 1
+    }
+}' | tee "$out/${sample}.coverage.txt"
+
+echo "[$sample] ALL STEPS COMPLETED."
+EOF
+chmod +x mapping/lion/run_one_sample.sh
 
 
+
+# Then we can run - for SRR12354194 sample - to do the previous 7 steps in one go
+(homotherium_mapping) [debasmita@node01 FEL001]$ bash mapping/lion/run_one_sample.sh SRR12354194
