@@ -432,7 +432,42 @@ samtools view mapping/lion/SRR12354115.sorted.bam \
 # Will repeat these following steps for each of the 20 SRA accession number
 
 # 1. start processing SRR12354128 with BWA aln
+(homotherium_mapping) [debasmita@node01 FEL001]$ bwa aln -t 8 -l 1024 reference/lion/lion_genome.fna FASTQ/trimmed/SRR12354128.truncated.gz > mapping/lion/SRR12354128.sai
 
+# 2. generate the SAM alignment file
+(homotherium_mapping) [debasmita@node01 FEL001]$ bwa samse reference/lion/lion_genome.fna mapping/lion/SRR12354128.sai FASTQ/trimmed/SRR12354128.truncated.gz > mapping/lion/SRR12354128.sam
+
+# 3. sort the alignments and save them as a BAM file
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools sort -@ 4 -o mapping/lion/SRR12354128.sorted.bam mapping/lion/SRR12354128.sam
+
+# 4. index the sorted BAM file
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools index -@ 4 mapping/lion/SRR12354128.sorted.bam
+
+# 5. check how many reads mapped to the lion reference
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/SRR12354128.sorted.bam
+
+# 6. retain alignments with mapping quality (MAPQ) ≥ 30:
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools view -@ 4 -b -q 30 -o mapping/lion/SRR12354128.MAPQ30.bam mapping/lion/SRR12354128.sorted.bam
+
+# 7. index the filtered BAM file:
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools index -@ 4 mapping/lion/SRR12354128.MAPQ30.bam
+
+
+# 8. calculate the genome coverage and mean sequencing depth;
+
+samtools coverage mapping/lion/SRR12354128.MAPQ30.bam |
+awk 'NR>1 {
+    len=$3-$2+1
+    total_len+=len
+    covered+=$5
+    depth_sum+=$7*len
+}
+END {
+    printf "Reference length: %.0f bp\n", total_len
+    printf "Covered bases: %.0f bp\n", covered
+    printf "Genome coverage: %.4f%%\n", 100*covered/total_len
+    printf "Mean depth: %.6fx\n", depth_sum/total_len
+}'
 
 
 
