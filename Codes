@@ -428,6 +428,10 @@ samtools view mapping/lion/SRR12354115.sorted.bam \
 # Count reads with MAPQ ≥ 30
 (homotherium_mapping) [debasmita@node01 FEL001]$ samtools view -c -q 30 mapping/lion/SRR12354115.sorted.bam
 
+-----------------------------------------------------------------------------------------
+# Will repeat these following steps for each of the 20 SRA accession number
+
+# 1. start processing SRR12354128 with BWA aln
 
 
 
