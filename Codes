@@ -564,8 +564,98 @@ chmod +x mapping/lion/run_one_sample.sh
 (homotherium_mapping) [debasmita@node01 FEL001]$ bash mapping/lion/run_one_sample.sh SRR12354196
 
 
+
 # compile the results for all processed samples into one summary table.
 for f in mapping/lion/SRR*.coverage.txt; do
     echo "=== $(basename "$f" .coverage.txt) ==="
     cat "$f"
 done
+
+
+
+# Run FastQC on all 20 trimmed FASTQ files in one batch
+
+fastqc FASTQ/trimmed/*.truncated.gz \
+    --outdir quality_control/fastqc \
+    --threads 4
+
+
+
+# Check how many FastQC ZIP reports are present and confirm that all 20 samples were processed.
+(homotherium_mapping) [debasmita@node01 FEL001]$ echo "Trimmed FASTQ files: $(find FASTQ/trimmed -maxdepth 1 -type f -name '*.truncated.gz' | wc -l)"
+(homotherium_mapping) [debasmita@node01 FEL001]$ echo "FastQC ZIP reports:  $(find quality_control/fastqc -maxdepth 1 -type f -name '*_fastqc.zip' | wc -l)"
+
+
+
+
+
+# Summarize the entire dataset
+
+python - <<'PY'
+import glob, os, zipfile, csv
+
+fastqc_dir = "quality_control/fastqc"
+output_file = os.path.join(fastqc_dir, "FastQC_summary_all_samples.csv")
+
+modules = [
+    "Basic Statistics",
+    "Per base sequence quality",
+    "Per tile sequence quality",
+    "Per sequence quality scores",
+    "Per base sequence content",
+    "Per sequence GC content",
+    "Per base N content",
+    "Sequence Length Distribution",
+    "Sequence Duplication Levels",
+    "Overrepresented sequences",
+    "Adapter Content"
+]
+
+rows = []
+
+for zfile in sorted(glob.glob(os.path.join(fastqc_dir, "*_fastqc.zip"))):
+    sample = os.path.basename(zfile).replace("_fastqc.zip", "")
+    results = {"Sample": sample}
+
+    with zipfile.ZipFile(zfile) as z:
+        summary_file = next(
+            (f for f in z.namelist() if f.endswith("/summary.txt")), None
+        )
+        if summary_file is None:
+            print("WARNING: summary.txt missing:", zfile)
+            continue
+
+        with z.open(summary_file) as f:
+            for line in f.read().decode().splitlines():
+                parts = line.split("\t")
+                if len(parts) >= 2:
+                    results[parts[1]] = parts[0]
+
+    for module in modules:
+        results.setdefault(module, "MISSING")
+    rows.append(results)
+
+with open(output_file, "w", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["Sample"] + modules)
+    writer.writeheader()
+    writer.writerows(rows)
+
+print("Samples processed:", len(rows))
+print("Saved:", output_file)
+print("\nPASS/WARN/FAIL counts across samples:")
+for module in modules:
+    counts = {}
+    for row in rows:
+        status = row[module]
+        counts[status] = counts.get(status, 0) + 1
+    print(f"{module}: {counts}")
+
+print("\nSamples with any FAIL or WARN:")
+for row in rows:
+    issues = [
+        f"{m}={row[m]}" for m in modules
+        if row[m] in ("FAIL", "WARN", "MISSING")
+    ]
+    if issues:
+        print(row["Sample"] + ": " + ", ".join(issues))
+PY
