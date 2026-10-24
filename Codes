@@ -659,3 +659,101 @@ for row in rows:
     if issues:
         print(row["Sample"] + ": " + ", ".join(issues))
 PY
+
+
+
+
+
+
+
+# Retrieve the detailed NCBI experiment records
+
+python - <<'PY'
+import csv
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+
+with open("sra_metadata.csv", newline="") as f:
+    experiments = sorted({
+        row["Experiment"]
+        for row in csv.DictReader(f)
+        if row.get("Experiment")
+    })
+
+url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+params = urllib.parse.urlencode({
+    "db": "sra",
+    "id": ",".join(experiments),
+    "retmode": "xml"
+})
+
+request = urllib.request.Request(
+    f"{url}?{params}",
+    headers={"User-Agent": "HomotheriumResearch/1.0"}
+)
+
+with urllib.request.urlopen(request, timeout=60) as response:
+    xml_data = response.read()
+
+root = ET.fromstring(xml_data)
+root_names = [
+    "TITLE", "EXPERIMENT_TITLE", "LIBRARY_NAME",
+    "LIBRARY_STRATEGY", "LIBRARY_SOURCE",
+    "LIBRARY_SELECTION", "DESIGN_DESCRIPTION"
+]
+
+for exp in root.iter("EXPERIMENT"):
+    acc = exp.get("accession", "")
+    print(f"\nExperiment: {acc}")
+    for name in root_names:
+        for elem in exp.iter(name):
+            if elem.text and elem.text.strip():
+                print(f"  {name}: {elem.text.strip()}")
+PY
+
+
+
+
+# check whether the runs contain overlapping reads
+
+python - <<'PY'
+import gzip
+import glob
+import os
+from collections import defaultdict
+
+files = sorted(glob.glob("FASTQ/trimmed/SRR*.truncated.gz"))
+seen = defaultdict(set)
+
+print("Sample\tReads_checked\tUnique_sequences\tDuplicate_fraction")
+
+for path in files:
+    sample = os.path.basename(path).replace(".truncated.gz", "")
+    total = 0
+    unique = set()
+
+    with gzip.open(path, "rt") as f:
+        while True:
+            header = f.readline()
+            if not header:
+                break
+            seq = f.readline().strip()
+            f.readline()
+            f.readline()
+            if seq:
+                unique.add(seq)
+                total += 1
+
+    print(f"{sample}\t{total}\t{len(unique)}\t{1-len(unique)/total:.4f}")
+    seen[sample] = unique
+
+print("\nPairwise exact sequence overlap:")
+for i, a in enumerate(files):
+    sa = os.path.basename(a).replace(".truncated.gz", "")
+    for b in files[i+1:]:
+        sb = os.path.basename(b).replace(".truncated.gz", "")
+        overlap = len(seen[sa] & seen[sb])
+        if overlap:
+            print(f"{sa}\t{sb}\t{overlap}")
+PY
