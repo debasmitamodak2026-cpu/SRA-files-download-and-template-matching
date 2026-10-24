@@ -799,5 +799,9 @@ done
 (homotherium_mapping) [debasmita@node01 FEL001]$ samtools --version
 (homotherium_mapping) [debasmita@node01 FEL001]$ samtools markdup --help 2>&1 | head -40
 (homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/merged_shotgun.sorted.bam
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools view -@ 8 -b -q 30 -F 4 -o mapping/lion/merged_shotgun.MAPQ30.bam mapping/lion/merged_shotgun.sorted.bam
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/merged_shotgun.MAPQ30.bam
 
+
+(homotherium_mapping) [debasmita@node01 FEL001]$ conda activate mapdamage_env
 
