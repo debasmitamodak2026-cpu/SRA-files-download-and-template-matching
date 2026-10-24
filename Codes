@@ -562,3 +562,10 @@ chmod +x mapping/lion/run_one_sample.sh
 (homotherium_mapping) [debasmita@node01 FEL001]$ bash mapping/lion/run_one_sample.sh SRR12354194
 # For other SRA accessions, repeat this code replacing the "SRR..." part
 (homotherium_mapping) [debasmita@node01 FEL001]$ bash mapping/lion/run_one_sample.sh SRR12354196
+
+
+# compile the results for all processed samples into one summary table.
+for f in mapping/lion/SRR*.coverage.txt; do
+    echo "=== $(basename "$f" .coverage.txt) ==="
+    cat "$f"
+done
