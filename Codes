@@ -560,3 +560,5 @@ chmod +x mapping/lion/run_one_sample.sh
 
 # Then we can run - for SRR12354194 sample - to do the previous 7 steps in one go
 (homotherium_mapping) [debasmita@node01 FEL001]$ bash mapping/lion/run_one_sample.sh SRR12354194
+# For other SRA accessions, repeat this code replacing the "SRR..." part
+(homotherium_mapping) [debasmita@node01 FEL001]$ bash mapping/lion/run_one_sample.sh SRR12354196
