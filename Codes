@@ -757,3 +757,23 @@ for i, a in enumerate(files):
         if overlap:
             print(f"{sa}\t{sb}\t{overlap}")
 PY
+
+
+
+
+
+
+
+# check whether all 20 BAMs are compatible
+
+for f in mapping/lion/SRR*.sorted.bam; do
+    echo -n "$(basename "$f"): "
+    samtools view -H "$f" | awk -F '\t' '
+        $1=="@SQ" {
+            for (i=1; i<=NF; i++) {
+                if ($i ~ /^SN:/) n++
+            }
+        }
+        END {print n, "reference sequences"}
+    '
+done
