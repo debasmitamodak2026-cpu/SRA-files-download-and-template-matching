@@ -761,9 +761,6 @@ PY
 
 
 
-
-
-
 # check whether all 20 BAMs are compatible
 
 for f in mapping/lion/SRR*.sorted.bam; do
@@ -777,3 +774,21 @@ for f in mapping/lion/SRR*.sorted.bam; do
         END {print n, "reference sequences"}
     '
 done
+
+
+
+# Merge all 20 BAM sorted files
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools merge -@ 8 -f mapping/lion/merged_shotgun.sorted.bam mapping/lion/SRR*.sorted.bam
+
+# check whether the merge completed successfully: (should not produce any output)
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools quickcheck -v mapping/lion/merged_shotgun.sorted.bam
+
+# index the merged BAM
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools index -@ 8 mapping/lion/merged_shotgun.sorted.bam
+
+# check the combined alignment statistics.
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/merged_shotgun.sorted.bam
+
+# calculate combined coverage
+
+
