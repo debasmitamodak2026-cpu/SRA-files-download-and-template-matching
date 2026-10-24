@@ -790,5 +790,14 @@ done
 (homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/merged_shotgun.sorted.bam
 
 # calculate combined coverage
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools coverage mapping/lion/merged_shotgun.sorted.bam
+
+# measure coverage using MAPQ ≥30 reads
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools coverage -q 30 mapping/lion/merged_shotgun.sorted.bam
+
+# check duplicate-marking support
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools --version
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools markdup --help 2>&1 | head -40
+(homotherium_mapping) [debasmita@node01 FEL001]$ samtools flagstat mapping/lion/merged_shotgun.sorted.bam
 
 
