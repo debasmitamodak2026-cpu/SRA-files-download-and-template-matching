@@ -213,4 +213,15 @@ datasets --version
     $ cat download_status.tsv
     # To see the download status
 
+    13. To download FEL030 - Urocyon littoralis
+    -------------------------------------------
+    # Crested a new tmux
+    $ tmux new-session -s CAN030_download
+    # Inside that tumx navigate to the CAN030 directory
+    $ cd /home/debasmita/workspace/Canidae_Felidae_Project/canids/genome_assemblies/CAN030
+    # Start the download (This link got from DNA ZOO)
+    $ wget -c https://dnazoo.s3.wasabisys.com/Urocyon_littoralis_catalinae/Urocyon_littoralis_catalinae_HiC.fasta.gz
+
+
+    
     
