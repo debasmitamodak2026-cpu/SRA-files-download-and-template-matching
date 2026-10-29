@@ -225,5 +225,7 @@ datasets --version
     $ wget -c https://dnazoo.s3.wasabisys.com/Urocyon_littoralis_catalinae/Urocyon_littoralis_catalinae_HiC.fasta.gz
 
 
-    
+
+    14. To download CAN013 - Cuon alpinus
+    -------------------------------------    
     
