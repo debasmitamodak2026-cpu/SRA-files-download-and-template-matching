@@ -1,21 +1,21 @@
-# 24 NCBI IDs of felids (24 species) listed in "24_felids_genome_assembly.txt' file.
-# Location in my Ubuntu: /home/user/Canidae_Felidae_Project/results/24_felids_genome_assembly.txt
+# 14 NCBI IDs of felids (24 species) listed in "14_canids_genome_assembly.txt' file.
+# Location in my Ubuntu: /home/user/Canidae_Felidae_Project/results/14_canids_genome_assembly.txt
 # Transfer it to server: (run in laptop terminal. not in server terminal)
-(base) user@user:~$ scp /home/user/Canidae_Felidae_Project/results/24_felids_genome_assembly.txt debasmita@10.58.98.103:/home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies
+(base) user@user:~$ scp /home/user/Canidae_Felidae_Project/results/14_canids_genome_assembly.txt debasmita@10.58.98.103:/home/debasmita/workspace/Canidae_Felidae_Project/canids/genome_assemblies
 
 
     FELID GENOME ASSEMBLY DOWNLOAD — COMMANDS IN ORDER
-    Project: /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies
+    Project: /home/debasmita/workspace/Canidae_Felidae_Project/canids/genome_assemblies
 
     This document collects the commands used in this workflow, in order. It includes the full download script and monitoring commands.
 
     1. Go to the project directory
     --------------------------------
-    $ cd /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies
+    $ cd /home/debasmita/workspace/Canidae_Felidae_Project/canlids/genome_assemblies
 
     2. Check the accession list
     ---------------------------
-    $ ls -lh 24_felids_genome_assembly.txt
+    $ ls -lh 14_canids_genome_assembly.txt
 
     3. Load Conda and activate the environment
     ------------------------------------------
@@ -29,7 +29,7 @@
 
     4. Check the input and script files
     -----------------------------------
-    $ ls -lh download_felid_genomes.sh 24_felids_genome_assembly.txt
+    $ ls -lh download_felid_genomes.sh 14_canids_genome_assembly.txt
     $ bash -n download_felid_genomes.sh
 
     # No output from `bash -n` means the shell syntax check passed.
