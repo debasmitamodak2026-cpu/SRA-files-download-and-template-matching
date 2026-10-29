@@ -227,5 +227,12 @@ datasets --version
 
 
     14. To download CAN013 - Cuon alpinus
-    -------------------------------------    
-    
+    ------------------------------------- 
+    # Make a new folder for it in server, path: /home/debasmita/workspace/Canidae_Felidae_Project/canids/genome_assemblies
+    $ mkdir CAN013
+    # Made new tmux session
+    $ tmux new-session -s CAN013_download
+    # Start download
+    $ cd /home/debasmita/workspace/Canidae_Felidae_Project/canids/genome_assemblies/CAN013
+    $ wget -c "https://download.cncb.ac.cn/gwh/Animals/Cuon_alpinus_Dhole_GWHAAAC00000000/GWHAAAC00000000.genome.fasta.gz"
+
