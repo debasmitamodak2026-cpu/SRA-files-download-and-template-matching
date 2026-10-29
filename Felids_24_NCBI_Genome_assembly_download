@@ -1,6 +1,6 @@
 # 24 NCBI IDs of felids (24 species) listed in "24_felids_genome_assembly.txt' file.
 # Location in my Ubuntu: /home/user/Canidae_Felidae_Project/results/24_felids_genome_assembly.txt
-# Transfer it to server:
+# Transfer it to server: (run in laptop terminal. not in server terminal)
 (base) user@user:~$ scp /home/user/Canidae_Felidae_Project/results/24_felids_genome_assembly.txt debasmita@10.58.98.103:/home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies
 
 
