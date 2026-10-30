@@ -1,0 +1,153 @@
+# To download the SRR files in server
+# Made a folder in server, path: cd workspace/Canidae_Felidae_Project/canids/
+$ mkdir sra
+$ cd sra
+$ pwd
+# Output: /home/debasmita/workspace/Canidae_Felidae_Project/canids/sra
+
+# Transfer the 7_canids_SRR_runs.txt from my laptop to server - ran this command in laptop terminal
+$ scp /home/user/Canidae_Felidae_Project/results/7_canids_SRR_runs.txt  debasmita@10.58.98.103:/home/debasmita/workspace/Canidae_Felidae_Project/canids/sra
+
+# Made a new tmux 
+$ tmux new-session -s 7_canids_srr
+
+# Inside the tmux
+-----------------
+
+# Go to the folder
+$ cd /home/debasmita/workspace/Canidae_Felidae_Project/canids/sra
+
+
+# Made the download script
+
+
+cd /home/debasmita/workspace/Canidae_Felidae_Project/canids/sra
+
+cat > download_canid_sra.sh <<'EOF'
+#!/usr/bin/env bash
+
+set -u
+
+BASE_DIR="/home/debasmita/workspace/Canidae_Felidae_Project/canids/sra"
+INPUT="${BASE_DIR}/7_canids_SRR_runs.txt"
+STATUS="${BASE_DIR}/download_status.tsv"
+
+mkdir -p "$BASE_DIR"
+
+if [[ ! -f "$INPUT" ]]; then
+    echo "ERROR: Input file not found: $INPUT"
+    exit 1
+fi
+
+# Create a status file with a header if it does not exist.
+if [[ ! -f "$STATUS" ]]; then
+    printf "Species_ID\tRun_accession\tStatus\tTimestamp\n" > "$STATUS"
+fi
+
+while IFS=$'\t' read -r species acc || [[ -n "${species:-}" ]]; do
+
+    # Remove Windows carriage returns, if present.
+    species="${species//$'\r'/}"
+    acc="${acc//$'\r'/}"
+
+    # Skip header and empty lines.
+    [[ "$species" == "Species_ID" ]] && continue
+    [[ -z "$species" || -z "$acc" ]] && continue
+
+    SPECIES_DIR="${BASE_DIR}/${species}"
+    mkdir -p "$SPECIES_DIR"
+
+    echo
+    echo "=========================================="
+    echo "Species ID : $species"
+    echo "Run        : $acc"
+    echo "Output     : $SPECIES_DIR"
+    echo "=========================================="
+
+    # Retrieve the run's FASTQ URLs from ENA.
+    API_URL="https://www.ebi.ac.uk/ena/portal/api/filereport?accession=${acc}&result=read_run&fields=run_accession,fastq_ftp&format=tsv"
+
+    if ! response=$(curl -fsSL --retry 5 --retry-delay 5 \
+        --connect-timeout 30 --max-time 120 "$API_URL"); then
+
+        echo "ERROR: Could not retrieve ENA metadata for $acc"
+        printf "%s\t%s\tMETADATA_FAILED\t%s\n" \
+            "$species" "$acc" "$(date '+%F %T')" >> "$STATUS"
+        continue
+    fi
+
+    # Extract the fastq_ftp column from the response.
+    fastq_urls=$(printf '%s\n' "$response" |
+        awk -F '\t' 'NR > 1 {print $2}' |
+        tr ';' '\n' |
+        sed '/^[[:space:]]*$/d')
+
+    if [[ -z "$fastq_urls" ]]; then
+        echo "ERROR: No FASTQ URLs found for $acc"
+        echo "Check whether the run is available in ENA."
+        printf "%s\t%s\tNO_FASTQ_URL\t%s\n" \
+            "$species" "$acc" "$(date '+%F %T')" >> "$STATUS"
+        continue
+    fi
+
+    failed=0
+
+    while IFS= read -r path; do
+        [[ -z "$path" ]] && continue
+
+        # ENA supplies paths without the URL scheme.
+        url="https://${path}"
+        filename="${path##*/}"
+        output_file="${SPECIES_DIR}/${filename}"
+
+        echo "Downloading: $filename"
+
+        if wget -c --tries=0 --timeout=60 --read-timeout=60 \
+            --waitretry=10 --retry-connrefused \
+            -O "$output_file" "$url"; then
+
+            # Verify the downloaded gzip file.
+            if gzip -t "$output_file"; then
+                echo "Verified: $filename"
+            else
+                echo "ERROR: gzip integrity check failed: $filename"
+                failed=1
+            fi
+        else
+            echo "ERROR: Download failed: $filename"
+            failed=1
+        fi
+
+    done <<< "$fastq_urls"
+
+    if [[ "$failed" -eq 0 ]]; then
+        status="SUCCESS"
+    else
+        status="DOWNLOAD_OR_VALIDATION_FAILED"
+    fi
+
+    printf "%s\t%s\t%s\t%s\n" \
+        "$species" "$acc" "$status" "$(date '+%F %T')" >> "$STATUS"
+
+    echo "Finished $acc: $status"
+
+done < "$INPUT"
+
+echo
+echo "All runs processed."
+echo "Status file: $STATUS"
+EOF
+
+chmod +x download_canid_sra.sh
+
+
+
+
+# Then start the download
+---------------------------
+
+
+cd /home/debasmita/workspace/Canidae_Felidae_Project/canids/sra
+
+./download_canid_sra.sh 2>&1 | tee download_console.log
+
