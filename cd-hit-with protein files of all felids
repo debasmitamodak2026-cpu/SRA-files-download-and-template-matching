@@ -2,3 +2,13 @@
 # In the location in my server:  
 [debasmita@node01 Protein_files]$ pwd
 /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Protein_files
+
+# Then to remove 99% identical proteins ran this command in this folder.
+
+cd-hit \
+  -i felid_all_NCBI_proteome.fa \
+  -o felid_all_NCBI_proteome_99.fasta \
+  -c 0.99 \
+  -n 5 \
+  -T 10 \
+  -M 0
