@@ -1,1 +1,4 @@
-
+# We concatenated all the "sSpecies_name.proteome.fa" in a file named "felid_all_NCBI_proteome.fa"
+# In the location in my server:  
+[debasmita@node01 Protein_files]$ pwd
+/home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Protein_files
