@@ -41,3 +41,14 @@ Total bases: 2586767535
 Lowercase bases: 0
 Uppercase bases: 2586767535
 Soft-masked: 0.0 %
+
+# Create an output folder
+(repeatmasker) [debasmita@node01 Leopardus_tigrinus]$ mkdir -p repeatmasker_masked
+# Start repeat masking with 10 threads
+RepeatMasker \
+  -species Felidae \
+  -engine rmblast \
+  -xsmall \
+  -pa 10 \
+  -dir repeatmasker_masked \
+  Leopardus_tigrinus.genome.fa
