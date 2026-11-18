@@ -1,0 +1,15 @@
+# The 23 species under felidae, whoes GENOME assembly were not available, need to search for their SRA files
+# Made a dedicated session for this 
+$ tmux new -s felids_srr
+
+# Made the working directory in side : /home/debasmita/workspace/Canidae_Felidae_Project/felids
+$ mkdir sra
+$ cd sra
+[debasmita@node01 sra]$ pwd
+/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra
+
+# Loaded the anaconda
+$ module load anaconda3/2024.06
+
+# Made the folder where search results will be
+$ mkdir felid_SRA_results
