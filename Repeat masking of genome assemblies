@@ -27,7 +27,7 @@ canids/genome_assemblies/CAN030/Urocyon_littoralis_catalinae.genome.fa  25336014
 
 
 # Created a tmux for masking
-$ tmux 
+$ tmux new-session -s masking
 # Then before starting the masking, checked it again.
 # Go to the folder 
 $ cd /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Leopardus_tigrinus
