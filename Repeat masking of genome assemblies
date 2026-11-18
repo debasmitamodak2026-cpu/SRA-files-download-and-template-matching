@@ -44,7 +44,7 @@ Soft-masked: 0.0 %
 
 # Create an output folder
 (repeatmasker) [debasmita@node01 Leopardus_tigrinus]$ mkdir -p repeatmasker_masked
-# Start repeat masking with 10 threads
+# Start repeat masking with 10 threads (10-12 hours can take)
 RepeatMasker \
   -species Felidae \
   -engine rmblast \
