@@ -29,9 +29,9 @@ canids/genome_assemblies/CAN030/Urocyon_littoralis_catalinae.genome.fa  25336014
 
 # Then before starting the masking, checked it again.
 # Go to the folder 
-cd /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Leopardus_tigrinus
+$ cd /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Leopardus_tigrinus
 # Activate the environment
-
+$ module
 
 # Check the percentage of smallcase 
 (repeatmasker) [debasmita@node01 Leopardus_tigrinus]$ python -c "f='Leopardus_tigrinus.genome.fa'; s=''.join(x.strip() for x in open(f) if not x.startswith('>')); n=sum(c.islower() for c in s); print('Total bases:',len(s)); print('Lowercase bases:',n); print('Uppercase bases:',sum(c.isupper() for c in s)); print('Soft-masked:',round(100*n/len(s),2),'%')"
