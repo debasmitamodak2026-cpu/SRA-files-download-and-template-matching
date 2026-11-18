@@ -5,10 +5,8 @@
 
 # Then to remove 99% identical proteins ran this command in this folder.
 
-cd-hit \
-  -i felid_all_NCBI_proteome.fa \
-  -o felid_all_NCBI_proteome_99.fasta \
-  -c 0.99 \
-  -n 5 \
-  -T 10 \
-  -M 0
+cd-hit -i felid_all_NCBI_proteome.fa -o felid_all_NCBI_proteome_99.fasta -c 0.99 -n 5 -T 10 -M 0
+
+# Then to check how many sequences remained, we check the number of fasta headers in the input and output file
+grep -c '^>' felid_all_NCBI_proteome.fa
+grep -c '^>' felid_all_NCBI_proteome_cdhit99.fa
