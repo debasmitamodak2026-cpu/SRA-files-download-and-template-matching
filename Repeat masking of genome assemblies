@@ -1,1 +1,41 @@
+# We check which of the genomes (which did not have protein fasta files) are masked.
+# The results are saved at the location in server: 
+# /home/debasmita/workspace/Canidae_Felidae_Project/results/assembly_qc/softmask_check
+# And checked the results of two .tsv files in that folder
 
+(repeatmasker) [debasmita@node01 softmask_check]$ cat NCBI_14_softmask_results.tsv 
+FASTA_file      Uppercase_bases Lowercase_bases Lowercase_percentage    Softmask_status
+felids/genome_assemblies/FEL008/Caracal_caracal.genome.fa       1574402214      712383562       31.152177       SOFTMASKED
+felids/genome_assemblies/FEL012/Felis_chaus.genome.fa   1607449043      820849622       33.803487       SOFTMASKED
+felids/genome_assemblies/FEL014/Felis_nigripes.genome.fa        1601836899      811665631       33.630196       SOFTMASKED
+felids/genome_assemblies/FEL023/Leopardus_pardalis.genome.fa    1627591979      835504546       33.920901       SOFTMASKED
+felids/genome_assemblies/FEL027/Leptailurus_serval.genome.fa    1626980363      833133670       33.865653       SOFTMASKED
+felids/genome_assemblies/FEL032/Otocolobus_manul.genome.fa      1604763771      882547209       35.481981       SOFTMASKED
+felids/genome_assemblies/FEL040/Neofelis_diardi.genome.fa       1601575938      783869569       32.86051        SOFTMASKED
+canids/genome_assemblies/CAN006/Canis_latrans.genome.fa 1584435131      760026869       32.417965       SOFTMASKED
+canids/genome_assemblies/CAN012/Chrysocyon_brachyurus.genome.fa 1594916946      733268023       31.495265       SOFTMASKED
+canids/genome_assemblies/CAN027/Otocyon_megalotis.genome.fa     1580599748      794049884       33.438612       SOFTMASKED
+canids/genome_assemblies/CAN028/Speothos_venaticus.genome.fa    1587722843      707299234       30.818842       SOFTMASKED
+canids/genome_assemblies/CAN029/Urocyon_cinereoargenteus.genome.fa      1625697319      1033066324      38.85514        SOFTMASKED
+canids/genome_assemblies/CAN034/Vulpes_corsac.genome.fa 1597719911      750572652       31.962485       SOFTMASKED
+canids/genome_assemblies/CAN035/Vulpes_ferrilata.genome.fa      1611476518      768148014       32.280219       SOFTMASKED
+
+(repeatmasker) [debasmita@node01 softmask_check]$ cat softmask_results.tsv 
+FASTA_file      Uppercase_bases Lowercase_bases Lowercase_percentage    Softmask_status
+felids/genome_assemblies/FEL025/Leopardus_tigrinus.genome.fa    2567013235      0       0.0     NOT_SOFTMASKED
+canids/genome_assemblies/CAN030/Urocyon_littoralis_catalinae.genome.fa  2533601400      0       0.0     NOT_SOFTMASKED
+
+
+
+# Then before starting the masking, checked it again.
+# Go to the folder 
+cd /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Leopardus_tigrinus
+# Activate the environment
+
+
+# Check the percentage of smallcase 
+(repeatmasker) [debasmita@node01 Leopardus_tigrinus]$ python -c "f='Leopardus_tigrinus.genome.fa'; s=''.join(x.strip() for x in open(f) if not x.startswith('>')); n=sum(c.islower() for c in s); print('Total bases:',len(s)); print('Lowercase bases:',n); print('Uppercase bases:',sum(c.isupper() for c in s)); print('Soft-masked:',round(100*n/len(s),2),'%')"
+Total bases: 2586767535
+Lowercase bases: 0
+Uppercase bases: 2586767535
+Soft-masked: 0.0 %
