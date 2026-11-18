@@ -52,3 +52,6 @@ RepeatMasker \
   -pa 10 \
   -dir repeatmasker_masked \
   Leopardus_tigrinus.genome.fa
+
+
+# Got detached from tmux with "Ctrl+B", leave the keys, and press "D" the key
