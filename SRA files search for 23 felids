@@ -13,3 +13,126 @@ $ module load anaconda3/2024.06
 
 # Made the folder where search results will be
 $ mkdir felid_SRA_results
+
+
+# Create a SRA dedicated environment
+
+conda create -n sra_tools \
+  -c conda-forge \
+  -c bioconda \
+  --strict-channel-priority \
+  sra-tools
+
+
+
+# Activate the environment
+$ conda activate sra_tools
+
+
+
+
+# Verify installation
+
+$ which prefetch
+$ which fasterq-dump
+$ prefetch --version
+$ fasterq-dump --version
+
+
+
+# Activate the environment
+$ conda activate sra_tools
+
+
+
+
+# Creat the directory
+$ cd /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra
+$ mkdir -p sra_downloads/accessions
+$ mkdir -p sra_downloads/sra_files
+$ mkdir -p sra_downloads/logs
+
+
+# Made the list of SRA files I want to download
+$ nano sra_downloads/accessions/sra.txt
+
+# Copied the SRA run IDs - sorted in "NCBI_Genome_assembly" excel file in Onedrive
+# Location Onedrive: My files > 2026-2027 > Canidae_Felidae > NCBI_Genome_assembly.xlsx
+# Sheet : SRA_runs_felids_I_will_download
+# Pated these IDs in sra.txt and then Ctrl+O, reales keys. Enter, release, Ctrl+X
+SRR6071641
+SRR6071642
+SRR25058272
+SRR25058271
+SRR25058274
+SRR31095954
+ERR14141044
+SRR6071637
+
+
+
+# Make paralel download script
+$ nano download_sra.sh
+
+
+
+
+# And put this code
+
+
+#!/bin/bash
+
+# Activate SRA Toolkit environment
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate sra_tools
+
+# Directories
+BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+ACCESSION_FILE="$BASE/accessions/sra.txt"
+OUTDIR="$BASE/sra_files"
+LOGDIR="$BASE/logs"
+
+mkdir -p "$OUTDIR" "$LOGDIR"
+
+# Check accession file
+if [[ ! -s "$ACCESSION_FILE" ]]; then
+    echo "ERROR: Accession file is missing or empty."
+    exit 1
+fi
+
+# Download a maximum of 5 accessions simultaneously
+echo "Starting SRA downloads..."
+echo "Parallel downloads: 5"
+echo "Output directory: $OUTDIR"
+
+cat "$ACCESSION_FILE" | \
+grep -v '^[[:space:]]*$' | \
+xargs -P 8 -I {} bash -c '
+    accession="$1"
+
+    echo "Starting: $accession"
+
+    prefetch "$accession" \
+        --max-size unlimited \
+        --output-directory "'"$OUTDIR"'" \
+        --resume yes \
+        > "'"$LOGDIR"'/${accession}.log" 2>&1
+
+    if [[ $? -eq 0 ]]; then
+        echo "SUCCESS: $accession"
+    else
+        echo "FAILED: $accession"
+    fi
+' _ {}
+
+echo "All download jobs have finished."
+
+
+# Then ctrl+o, release, Enter, release, ctrl+x - to save the changes
+
+# Made the script exicutable
+$ chmod +x download_sra.sh
+
+# Run the script
+$ ./download_sra.sh
+
