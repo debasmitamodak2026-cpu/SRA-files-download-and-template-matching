@@ -136,3 +136,9 @@ $ chmod +x download_sra.sh
 # Run the script
 $ ./download_sra.sh
 
+
+# Disconnected from the tmux --> Ctrl+B, release, D
+# Then we can check the amount of data got downloaded with this code
+[debasmita@node01 ~]$ du -sh /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/sra_files/
+
+
