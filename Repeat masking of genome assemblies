@@ -68,7 +68,7 @@ RepeatMasker \
 # Inside the tmux
 
 # Calculate soft mask percentage from being in this location: /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Leopardus_tigrinus
-$ python -c "f='repeatmasker_masked/Leopardus_tigrinus.genome.fa.masked'; s=''.join(x.strip() for x in open(f) if not x.startswith('>')); n=sum(c.islower() for c in s); print('Total bases:',len(s)); print('Lowercase bases:',n); print('Soft-masked:',round(100*n/len(s),2),'%')"
+(repeatmasker) [debasmita@node01 Leopardus_tigrinus]$ python -c "f='repeatmasker_masked/Leopardus_tigrinus.genome.fa.masked'; s=''.join(x.strip() for x in open(f) if not x.startswith('>')); n=sum(c.islower() for c in s); print('Total bases:',len(s)); print('Lowercase bases:',n); print('Soft-masked:',round(100*n/len(s),2),'%')"
 
 
 # Simlarly done for Urocyon littoralis. After repeat masking got completed, checked the result from this location: /home/debasmita/workspace/Canidae_Felidae_Project/canids/genome_assemblies/Urocyon_littoralis
