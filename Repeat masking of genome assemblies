@@ -55,3 +55,17 @@ RepeatMasker \
 
 
 # Got detached from tmux with "Ctrl+B", leave the keys, and press "D" the key
+
+
+# After complition the files we get in: /home/debasmita/workspace/Canidae_Felidae_Project/felids/genome_assemblies/Leopardus_tigrinus
+# File	and their Purpose
+# .masked	----> Soft masked genome
+# .out	----> Repeat annotation
+# .tbl	----> Repeat summary
+# .cat.gz	----> Combined repeat annotation
+
+
+
+
+# Calculate soft mask percentage
+$ python -c "f='repeatmasker_masked/Leopardus_tigrinus.genome.fa.masked'; s=''.join(x.strip() for x in open(f) if not x.startswith('>')); n=sum(c.islower() for c in s); print('Total bases:',len(s)); print('Lowercase bases:',n); print('Soft-masked:',round(100*n/len(s),2),'%')"
