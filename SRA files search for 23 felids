@@ -140,5 +140,6 @@ $ ./download_sra.sh
 # Disconnected from the tmux --> Ctrl+B, release, D
 # Then we can check the amount of data got downloaded with this code
 [debasmita@node01 ~]$ du -sh /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/sra_files/
-
-
+# For each file we can check.
+[debasmita@node01 sra]$ for d in sra_downloads/sra_files/*/; do     echo "========== $(basename "$d") ==========";     ls -lh "$d"; done
+# Whenever the download will be completed, the .sra.tmp  ----> temporary file, will show as only s.sra
