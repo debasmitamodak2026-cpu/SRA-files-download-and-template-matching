@@ -1,0 +1,20 @@
+# New tmux session
+$ tmux new-session -s srr_downstream
+
+# Set up directories and tools
+$ module load anaconda3/2024.06
+$ BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+$ SRA_DIR="$BASE/sra_files"
+$ RAW_DIR="$BASE/fastq_raw_new"
+$ TRIM_DIR="$BASE/fastq_trimmed_new"
+$ QC_DIR="$BASE/quality_control_new"
+$ mkdir -p "$RAW_DIR" "$TRIM_DIR" "$QC_DIR/fastqc" "$QC_DIR/multiqc"
+$ conda activate sra_tools
+$ which vdb-validate
+$ which fasterq-dump
+
+# Created dedicated environment for fastp
+$ conda create -n fastp_env -c conda-forge -c bioconda fastp -y
+
+# Activate the environment
+$ conda activate fastp_env
