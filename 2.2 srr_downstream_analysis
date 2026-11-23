@@ -18,3 +18,28 @@ $ conda create -n fastp_env -c conda-forge -c bioconda fastp -y
 
 # Activate the environment
 $ conda activate fastp_env
+
+# Verify installation
+(fastp_env) [debasmita@node01 sra]$ which fastp
+~/.conda/envs/fastp_env/bin/fastp
+(fastp_env) [debasmita@node01 sra]$ fastp --version
+fastp 1.4.0
+
+
+
+# First need to check the downloaded sra files
+$ conda activate sra_tools
+$ BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+$ SRA_DIR="$BASE/sra_files"
+$ RAW_DIR="$BASE/fastq_raw_new"
+$ TRIM_DIR="$BASE/fastq_trimmed_new"
+$ mkdir -p "$RAW_DIR" "$TRIM_DIR"
+
+# Check whether the four SRA files are present:(started with four, because these got downloaded in my server at first out of the 8 SRA files.
+
+for acc in ERR14141044 SRR25058271 SRR25058272 SRR25058274
+do
+    echo "===== $acc ====="
+    find "$SRA_DIR" -type f -name "$acc.sra" -exec ls -lh {} \;
+done
+
