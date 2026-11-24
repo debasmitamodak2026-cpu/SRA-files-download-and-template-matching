@@ -43,3 +43,27 @@ do
     find "$SRA_DIR" -type f -name "$acc.sra" -exec ls -lh {} \;
 done
 
+
+
+# At first, Check their integrity
+
+
+
+ACCESSIONS=(
+ERR14141044
+SRR25058271
+SRR25058272
+SRR25058274
+)
+
+for acc in "${ACCESSIONS[@]}"; do
+
+    echo "================================"
+    echo "Validating $acc"
+    echo "================================"
+
+    sra_file=$(find "$SRA_DIR" -type f -name "$acc.sra" -print -quit)
+
+    vdb-validate "$sra_file"
+
+done
