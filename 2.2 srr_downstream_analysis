@@ -67,3 +67,43 @@ for acc in "${ACCESSIONS[@]}"; do
     vdb-validate "$sra_file"
 
 done
+
+
+
+# Then before converting, check the storage
+$ df -h "$BASE"
+
+
+# Check temporary storage and quota
+$ echo "TMPDIR=$TMPDIR"
+$ df -h "${TMPDIR:-/tmp}"
+$ df -i "${TMPDIR:-/tmp}"
+$ quota -s
+
+
+# Create a dedicated temporary directory (we are in tmux, and sra_tools environment)
+$ BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+$ RAW_DIR="$BASE/fastq_raw_new"
+$ TMP_DIR="$BASE/fasterq_tmp"
+$ mkdir -p "$RAW_DIR" "$TMP_DIR"
+$ chmod 700 "$TMP_DIR"
+$ export TMPDIR="$TMP_DIR"
+
+# Then verify the temporary directory
+$ echo "$TMPDIR"
+$ df -h "$TMPDIR"
+
+
+
+# Convert the first accession - ERR14141044 (30 minutes to 2 hours - can take)
+
+
+ACC="ERR14141044"
+
+SRA_FILE="$BASE/sra_files/$ACC/$ACC.sra"
+
+fasterq-dump "$SRA_FILE" \
+    --split-files \
+    --threads 8 \
+    --temp "$TMPDIR" \
+    --outdir "$RAW_DIR"
