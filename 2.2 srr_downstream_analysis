@@ -120,4 +120,17 @@ $ ls -lh "$RAW_DIR"/ERR14141044*
 $ conda activate seqkit_env
 $ seqkit stats "$RAW_DIR"/ERR14141044*.fastq
 
-# 
+
+
+# Compress the raw FASTQ files (each of the files might take ~ 3 hours)
+$ gzip "$RAW_DIR/ERR14141044_1.fastq"
+$ gzip "$RAW_DIR/ERR14141044_2.fastq"
+
+
+# Verify the compressed files
+$ ls -lh "$RAW_DIR"/ERR14141044*.fastq.gz
+
+
+# Test compression integrity (If both commands return to the prompt without errors, the compressed files pass the gzip integrity test.)
+$ gzip -t "$RAW_DIR/ERR14141044_1.fastq.gz"
+$ gzip -t "$RAW_DIR/ERR14141044_2.fastq.gz"
