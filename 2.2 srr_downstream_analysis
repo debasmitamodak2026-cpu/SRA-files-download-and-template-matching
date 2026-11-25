@@ -134,3 +134,165 @@ $ ls -lh "$RAW_DIR"/ERR14141044*.fastq.gz
 # Test compression integrity (If both commands return to the prompt without errors, the compressed files pass the gzip integrity test.)
 $ gzip -t "$RAW_DIR/ERR14141044_1.fastq.gz"
 $ gzip -t "$RAW_DIR/ERR14141044_2.fastq.gz"
+
+
+
+# Now to automate the fastq conversion and zipping those files for rest of the 7 sra files for felids
+# (as we started downloading 8 sra files for felids)
+# we used this code
+
+
+
+
+
+cat > /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/convert_remaining_felids.sh <<'EOF'
+#!/usr/bin/env bash
+
+set -u
+
+# Load software
+module load anaconda3/2024.06
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate sra_tools
+
+# Directories
+BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+SRA_DIR="$BASE/sra_files"
+RAW_DIR="$BASE/fastq_raw_new"
+TMP_DIR="$BASE/fasterq_tmp"
+WORK_DIR="$BASE/conversion_work"
+
+mkdir -p "$RAW_DIR" "$TMP_DIR" "$WORK_DIR"
+chmod 700 "$TMP_DIR"
+
+export TMPDIR="$TMP_DIR"
+
+# Remaining seven accessions
+ACCESSIONS=(
+    SRR25058271
+    SRR25058272
+    SRR25058274
+    SRR31095954
+    SRR6071641
+    SRR6071642
+    SRR6071637
+)
+
+LOG="$BASE/conversion_status.tsv"
+
+echo -e "Accession\tStatus\tDate" > "$LOG"
+
+for ACC in "${ACCESSIONS[@]}"; do
+
+    echo
+    echo "========================================"
+    echo "Processing: $ACC"
+    echo "========================================"
+
+    SRA_FILE="$SRA_DIR/$ACC/$ACC.sra"
+    OUT1="$RAW_DIR/${ACC}_1.fastq.gz"
+    OUT2="$RAW_DIR/${ACC}_2.fastq.gz"
+
+    # Check whether SRA file exists
+    if [[ ! -s "$SRA_FILE" ]]; then
+        echo "ERROR: SRA file missing: $SRA_FILE"
+        echo -e "$ACC\tSRA_MISSING\t$(date)" >> "$LOG"
+        continue
+    fi
+
+    # Skip if both compressed FASTQ files already exist and are valid
+    if [[ -s "$OUT1" && -s "$OUT2" ]]; then
+        if gzip -t "$OUT1" "$OUT2"; then
+            echo "Already converted and compressed. Skipping $ACC"
+            echo -e "$ACC\tSKIPPED_ALREADY_COMPLETE\t$(date)" >> "$LOG"
+            continue
+        fi
+    fi
+
+    # Avoid overwriting incomplete or existing output files
+    if [[ -e "$OUT1" || -e "$OUT2" ]]; then
+        echo "WARNING: Existing partial or invalid output detected."
+        echo "Please inspect these files before rerunning."
+        echo -e "$ACC\tEXISTING_OUTPUT_NEEDS_CHECK\t$(date)" >> "$LOG"
+        continue
+    fi
+
+    ACC_WORK="$WORK_DIR/$ACC"
+    ACC_TMP="$TMP_DIR/$ACC"
+
+    mkdir -p "$ACC_WORK" "$ACC_TMP"
+
+    echo "Starting fasterq-dump for $ACC"
+
+    fasterq-dump "$SRA_FILE" \
+        --split-files \
+        --threads 8 \
+        --temp "$ACC_TMP" \
+        --outdir "$ACC_WORK"
+
+    if [[ $? -ne 0 ]]; then
+        echo "ERROR: fasterq-dump failed for $ACC"
+        echo -e "$ACC\tFASTERQ_FAILED\t$(date)" >> "$LOG"
+        continue
+    fi
+
+    # Confirm paired-end FASTQ files were generated
+    if [[ ! -s "$ACC_WORK/${ACC}_1.fastq" ||
+          ! -s "$ACC_WORK/${ACC}_2.fastq" ]]; then
+        echo "ERROR: Expected paired FASTQ files were not found."
+        echo -e "$ACC\tFASTQ_FILES_MISSING\t$(date)" >> "$LOG"
+        continue
+    fi
+
+    echo "Compressing FASTQ files for $ACC"
+
+    gzip -1 "$ACC_WORK/${ACC}_1.fastq" \
+            "$ACC_WORK/${ACC}_2.fastq"
+
+    if [[ $? -ne 0 ]]; then
+        echo "ERROR: gzip failed for $ACC"
+        echo -e "$ACC\tGZIP_FAILED\t$(date)" >> "$LOG"
+        continue
+    fi
+
+    # Test compressed files
+    if gzip -t "$ACC_WORK/${ACC}_1.fastq.gz" \
+               "$ACC_WORK/${ACC}_2.fastq.gz"; then
+
+        mv "$ACC_WORK/${ACC}_1.fastq.gz" "$RAW_DIR/"
+        mv "$ACC_WORK/${ACC}_2.fastq.gz" "$RAW_DIR/"
+
+        echo "SUCCESS: $ACC"
+        echo -e "$ACC\tSUCCESS\t$(date)" >> "$LOG"
+
+        # Remove only temporary conversion files after successful transfer
+        rmdir "$ACC_WORK" 2>/dev/null || true
+        rm -rf "$ACC_TMP"
+
+    else
+        echo "ERROR: gzip integrity test failed for $ACC"
+        echo -e "$ACC\tGZIP_TEST_FAILED\t$(date)" >> "$LOG"
+        continue
+    fi
+
+done
+
+echo
+echo "========================================"
+echo "All accession jobs have been attempted."
+echo "Check the status log:"
+echo "$LOG"
+echo "========================================"
+EOF
+
+
+
+
+
+
+# Then made it executable
+$ chmod +x /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/convert_remaining_felids.sh
+
+
+# then in tmux (felids_srr) we started running this script
+$ bash /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/convert_remaining_felids.sh
