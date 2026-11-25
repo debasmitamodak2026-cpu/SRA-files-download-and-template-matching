@@ -140,10 +140,19 @@ $ gzip -t "$RAW_DIR/ERR14141044_2.fastq.gz"
 # Now to automate the fastq conversion and zipping those files for rest of the 7 sra files for felids
 # (as we started downloading 8 sra files for felids)
 # we used this code
+# The script will:
+# 1. Process each accession sequentially.
+# 2. Convert the .sra file using fasterq-dump.
+# 3. Compress both FASTQ files using gzip.
+# 4. Verify the compressed files.
+# 5. Record success or failure in a status log.
+# 6. Skip accessions that have already been successfully converted and compressed.
+# 7. Continue to the next accession even if one fails.
 
 
 
 
+$$$$$$$$$$$$$$$$$$$$$$
 
 cat > /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/convert_remaining_felids.sh <<'EOF'
 #!/usr/bin/env bash
@@ -287,7 +296,7 @@ EOF
 
 
 
-
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 # Then made it executable
