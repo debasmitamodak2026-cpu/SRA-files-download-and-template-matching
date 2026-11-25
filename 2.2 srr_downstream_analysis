@@ -107,3 +107,17 @@ fasterq-dump "$SRA_FILE" \
     --threads 8 \
     --temp "$TMPDIR" \
     --outdir "$RAW_DIR"
+
+
+
+
+# Check the generated fastq files
+$ ls -lh "$RAW_DIR"/ERR14141044*
+
+
+
+# Check read statistics
+$ conda activate seqkit_env
+$ seqkit stats "$RAW_DIR"/ERR14141044*.fastq
+
+# 
