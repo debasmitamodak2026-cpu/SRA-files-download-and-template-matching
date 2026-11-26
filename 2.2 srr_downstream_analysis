@@ -102,9 +102,9 @@ $ df -h "$TMPDIR"
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-ACC="ERR14141044"
+$ ACC="ERR14141044"
 
-SRA_FILE="$BASE/sra_files/$ACC/$ACC.sra"
+$ SRA_FILE="$BASE/sra_files/$ACC/$ACC.sra"
 
 fasterq-dump "$SRA_FILE" \
     --split-files \
