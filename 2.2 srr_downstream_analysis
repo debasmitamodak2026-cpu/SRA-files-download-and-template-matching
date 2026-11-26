@@ -305,3 +305,47 @@ $ chmod +x /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_down
 
 # then in tmux (felids_srr) we started running this script
 $ bash /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/convert_remaining_felids.sh
+
+
+
+# After the run will be completed it will show
+# All accession jobs have been attempted.
+# Check the status log:
+# /home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads/conversion_status.tsv
+
+
+# Then, to check the conversion status
+$ BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+$ cat "$BASE/conversion_status.tsv"
+
+# Count successful conversions
+$ awk -F '\t' 'NR>1 {count[$2]++} END {for (status in count) print status, count[status]}' "$BASE/conversion_status.tsv"
+
+
+
+# Check the final FASTQ files
+$ ls -lh "$BASE/fastq_raw_new"/*.fastq.gz
+
+
+# Verify all 16 compressed FASTQ files
+
+$$$$$$$$$$$$$$$$$$$$
+
+BASE="/home/debasmita/workspace/Canidae_Felidae_Project/felids/sra/sra_downloads"
+RAW_DIR="$BASE/fastq_raw_new"
+
+for f in "$RAW_DIR"/*.fastq.gz; do
+    echo "Testing $(basename "$f")"
+    gzip -t "$f" || echo "ERROR: $f"
+done
+
+$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
