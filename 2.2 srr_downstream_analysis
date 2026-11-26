@@ -98,13 +98,12 @@ $ df -h "$TMPDIR"
 # Convert the first accession - ERR14141044 (30 minutes to 2 hours - can take)
 
 
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
 $ ACC="ERR14141044"
 
 $ SRA_FILE="$BASE/sra_files/$ACC/$ACC.sra"
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 fasterq-dump "$SRA_FILE" \
     --split-files \
